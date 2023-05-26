@@ -6,4 +6,5 @@ public class Project
 {
     public ProjectMetaData MetaData = new ProjectMetaData();
     public List<DataSource> DataSources = new List<DataSource>();
+    public List<GamePiece> Pieces = new List<GamePiece>();
 }

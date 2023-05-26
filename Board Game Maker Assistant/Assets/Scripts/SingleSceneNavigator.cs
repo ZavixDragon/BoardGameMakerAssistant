@@ -7,6 +7,7 @@ public class SingleSceneNavigator : OnMessage<NavigateTo>
     [SerializeField] private GameObject projectSelection;
     [SerializeField] private GameObject project;
     [SerializeField] private GameObject dataSource;
+    [SerializeField] private GameObject gamePiece;
     [SerializeField] private Button back;
 
     private Dictionary<Location, GameObject> _locationObjectMap;
@@ -17,12 +18,14 @@ public class SingleSceneNavigator : OnMessage<NavigateTo>
         projectSelection.SetActive(true);
         project.SetActive(false);
         dataSource.SetActive(false);
+        gamePiece.SetActive(false);
         back.onClick.AddListener(NavigateBack);
         _locationObjectMap = new Dictionary<Location, GameObject>
         {
             {Location.ProjectSelection, projectSelection},
             {Location.Project, project},
-            {Location.DataSource, dataSource}
+            {Location.DataSource, dataSource},
+            {Location.GamePiece, gamePiece}
         };
         ChangeLocation(Location.ProjectSelection);
     }
@@ -36,6 +39,8 @@ public class SingleSceneNavigator : OnMessage<NavigateTo>
         else if (_location == Location.Project)
             ChangeLocation(Location.ProjectSelection);
         else if (_location == Location.DataSource)
+            ChangeLocation(Location.Project);
+        else if (_location == Location.GamePiece)
             ChangeLocation(Location.Project);
     }
 

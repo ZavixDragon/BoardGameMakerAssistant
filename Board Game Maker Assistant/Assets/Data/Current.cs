@@ -15,11 +15,13 @@ public static class Current
     private static ProjectMetaData _currentProjectMetaData = new ProjectMetaData();
     private static Project _currentProject = new Project();
     private static DataSource _currentDataSource;
+    private static GamePiece _gamePiece;
 
     public static ClientSecrets GoogleSheetsCredentials => _currentCredentials;
     public static Projects Projects => _currentProjects;
     public static Project Project => _currentProject;
     public static DataSource DataSource => _currentDataSource;
+    public static GamePiece GamePiece => _gamePiece;
 
     public static void Init()
     {
@@ -64,9 +66,10 @@ public static class Current
     }
     
     public static void SelectDataSource(DataSource dataSource)
-    {
-        _currentDataSource = dataSource;
-    }
+        => _currentDataSource = dataSource;
+
+    public static void SelectGamePiece(GamePiece gamePiece)
+        => _gamePiece = gamePiece; 
 
     public static void DeleteProject(ProjectMetaData metaData)
     {

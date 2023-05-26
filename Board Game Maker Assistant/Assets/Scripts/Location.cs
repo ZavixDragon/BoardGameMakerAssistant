@@ -2,5 +2,6 @@
 {
     ProjectSelection,
     Project,
-    DataSource
+    DataSource,
+    GamePiece
 }
