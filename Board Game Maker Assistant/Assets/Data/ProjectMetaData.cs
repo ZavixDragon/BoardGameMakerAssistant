@@ -1,6 +1,5 @@
 ﻿using System;
 
-//Treat this as mutable
 [Serializable]
 public class ProjectMetaData
 {

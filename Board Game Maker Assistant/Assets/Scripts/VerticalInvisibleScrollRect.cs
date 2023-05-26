@@ -11,7 +11,7 @@ public class VerticalInvisibleScrollRect : MonoBehaviour
 {
     [SerializeField] private RectTransform content;
     [SerializeField] private RectTransform view;
-    [SerializeField] private float sensitivity;
+    [SerializeField] private FloatReference sensitivity;
 
     public void Update()
     {

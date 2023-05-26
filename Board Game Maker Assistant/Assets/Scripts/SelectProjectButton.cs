@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,10 +9,11 @@ public class SelectProjectButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI projectName;
     [SerializeField] private TextMeshProUGUI lastModifiedLabel;
     [SerializeField] private Button button;
+    [SerializeField] private Button delete;
 
-    private Project _project;
+    private ProjectMetaData _project;
     
-    public void Init(Project project) => _project = project;
+    public void Init(ProjectMetaData project) => _project = project;
 
     private void Start()
     {
@@ -21,15 +23,22 @@ public class SelectProjectButton : MonoBehaviour
             lastModifiedLabel.text = "";
             button.onClick.AddListener(() =>
             {
-                Current.MutateAndSave(x =>
+                Current.MutateAndSave(mutateProjects: projects =>
                 {
-                    var newProject = new Project();
-                    x.List.Add(newProject);
-                    Current.SelectProject(projects => projects.List.Single(proj => proj == newProject));
+                    var number = 1;
+                    while (Current.Projects.List.Any(x => x.Name == $"My Project {number}") || Current.Projects.List.Any(x => x.FilePath == Path.Combine(Application.persistentDataPath, $"MyProject{number}.json")))
+                        number++;
+                    var newProject = new ProjectMetaData
+                    {
+                        Name = $"My Project {number}",
+                        FilePath = Path.Combine(Application.persistentDataPath, $"MyProject{number}.json")
+                    };
+                    projects.List.Add(newProject);
+                    Current.SelectProject(newProject);
                     Message.Publish(new NavigateTo(Location.Project));
                 });
-                
             });
+            delete.gameObject.SetActive(false);
         }
         else
         {
@@ -37,8 +46,13 @@ public class SelectProjectButton : MonoBehaviour
             lastModifiedLabel.text = $"Last Modified: {_project.LastModifiedDate:g}";
             button.onClick.AddListener(() =>
             {
-                Current.SelectProject(projects => projects.List.Single(proj => proj == _project));
+                Current.SelectProject(_project);
                 Message.Publish(new NavigateTo(Location.Project));
+            });
+            delete.onClick.AddListener(() =>
+            {
+                Current.DeleteProject(_project);
+                gameObject.SetActive(false);
             });
         }
     }

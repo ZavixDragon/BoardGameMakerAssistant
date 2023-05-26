@@ -4,7 +4,7 @@ using UnityEngine;
  
 public class CompilationWindow : EditorWindow
 {
-    [MenuItem("Neon/Recompile")]
+    [MenuItem("Enigma Dragons/Recompile")]
     private static void ShowWindow()
     {
         GetWindow<CompilationWindow>();

@@ -1,5 +1,6 @@
 ﻿public enum Location
 {
     ProjectSelection,
-    Project
+    Project,
+    DataSource
 }
