@@ -3,5 +3,5 @@
 [Serializable]
 public class ImageElement
 {
-    public ConditionedSwitch<string> ImagePath;
+    public DataDependent<string> ImagePath = new DataDependent<string>();
 }

@@ -5,27 +5,25 @@ using UnityEngine;
 [Serializable]
 public class TextElement
 {
-    public bool UseProperty;
-    public string Property;
-    public string Content;
+    public DataDependent<string> Content = new DataDependent<string> { Concrete = "" };
     public string Font;
-    public bool Bold;
-    public bool Italic;
-    public bool Underline;
-    public bool Strikethrough;
-    public bool Lowercase;
-    public bool Uppercase;
-    public decimal FontSize;
-    public bool AutoSize;
-    public decimal AutoSizeMin;
-    public decimal AutoSizeMax;
-    public ConditionedSwitch<Color> Color;
-    public float CharacterSpacing;
-    public float WordSpacing;
-    public float LineSpacing;
-    public float ParagraphSpacing;
-    public HorizontalTextAlignment HorizontalAlignment;
-    public VerticalTextAlignment VerticalAlignment;
-    public bool Wrapping;
-    public TextOverflow Overflow;
+    public bool Bold = false;
+    public bool Italic = false;
+    public bool Underline = false;
+    public bool Strikethrough = false;
+    public bool Lowercase = false;
+    public bool Uppercase = false;
+    public decimal FontSize = 16;
+    public bool AutoSize = false;
+    public decimal AutoSizeMin = 8;
+    public decimal AutoSizeMax = 32;
+    public DataDependent<Color> Color = new DataDependent<Color> { Concrete = UnityEngine.Color.white };
+    public float CharacterSpacing = 0;
+    public float WordSpacing = 0;
+    public float LineSpacing = 0;
+    public float ParagraphSpacing = 0;
+    public HorizontalTextAlignment HorizontalAlignment = HorizontalTextAlignment.Center;
+    public VerticalTextAlignment VerticalAlignment = VerticalTextAlignment.Center;
+    public bool Wrapping = true;
+    public TextOverflow Overflow = TextOverflow.Overflow;
 }

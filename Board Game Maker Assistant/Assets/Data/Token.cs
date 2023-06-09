@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class Token
 {
-    public List<Element> FrontSideElements;
-    public List<Element> BackSideElements;
-    public bool SameOnBothSides;
+    public List<Element> FrontSideElements = new List<Element>();
+    public List<Element> BackSideElements = new List<Element>();
+    public bool SameOnBothSides = true;
+    
+    public Element[] Elements => FrontSideElements.Concat(BackSideElements).ToArray();
 }

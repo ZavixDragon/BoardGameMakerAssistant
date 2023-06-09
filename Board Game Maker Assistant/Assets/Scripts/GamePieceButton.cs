@@ -19,9 +19,11 @@ public class GamePieceButton : MonoBehaviour
             gamePieceName.text = "Add Game Piece";
             button.onClick.AddListener(() =>
             {
-                var gamePiece = new GamePiece();
-                Current.MutateAndSave(project => project.Pieces.Add(gamePiece));
-                Current.SelectGamePiece(gamePiece);
+                Current.MutateAndSave(project =>
+                {
+                    var gamePiece = project.AddGamePiece();
+                    Current.SelectGamePiece(gamePiece);
+                });
                 Message.Publish(new NavigateTo(Location.GamePiece));
             });
             delete.gameObject.SetActive(false);

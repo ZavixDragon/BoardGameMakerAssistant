@@ -45,7 +45,11 @@ public class DataSourceButton : MonoBehaviour
             });
             delete.onClick.AddListener(() =>
             {
-                Current.MutateAndSave(x => x.DataSources.Remove(_dataSource));
+                Current.MutateAndSave(x =>
+                {
+                    x.DataSources.Remove(_dataSource);
+                    x.EnsureValid();
+                });
                 Message.Publish(new DataSourcesUpdated());
             });
         }

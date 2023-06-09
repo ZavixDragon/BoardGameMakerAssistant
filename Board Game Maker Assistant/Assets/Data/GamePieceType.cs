@@ -1,7 +1,7 @@
 ﻿public enum GamePieceType
 {
-    Board,
-    Token,
-    Card,
-    Die
+    Board = 0,
+    Token = 1,
+    Card = 2,
+    Die = 3
 }

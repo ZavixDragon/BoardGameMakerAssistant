@@ -4,5 +4,5 @@ using System.Collections.Generic;
 [Serializable]
 public class TableRow
 {
-    public List<string> RawData;
+    public List<string> RawData = new List<string>();
 }

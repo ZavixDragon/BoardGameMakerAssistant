@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class DataSourceTableForm : MonoBehaviour
     [SerializeField] private TMP_InputField header;
     [SerializeField] private TextMeshProUGUI entriesStartAtLabel;
     [SerializeField] private TMP_InputField entriesStartAt;
+    [SerializeField] private TMP_Dropdown entryAlias;
     [SerializeField] private TextMeshProUGUI entriesCount;
     [SerializeField] private GameObject propertyPanel;
     [SerializeField] private TextMeshProUGUI propertyPrototype;
@@ -35,9 +37,14 @@ public class DataSourceTableForm : MonoBehaviour
     private void Refresh()
     {
         _table.Refresh();
+        Current.Project.EnsureValid();
         headerLabel.text = _table.Direction == EntryDirection.Row ? "Header Row:" : "Header Column:";
         entriesStartAtLabel.text = _table.Direction == EntryDirection.Column ? "Row Entries Start At:" : "Column Entries Start At:";
         entriesCount.text = $"Total Entries: {_table.GetEntries().Length.ToString()}";
+        _table.SetEntryAlias(_table.EntryAlias);
+        entryAlias.options = new[] {""}.Concat(_table.GetHeaders()).Select(x => new TMP_Dropdown.OptionData {text = x}).ToList();
+        if (!string.IsNullOrWhiteSpace(_table.EntryAlias))
+            entryAlias.value = _table.GetHeaders().FirstIndexOf(x => x == _table.EntryAlias) + 1;
         propertyPanel.DestroyAllChildren();
         foreach (var header in _table.GetHeaders())
             Instantiate(propertyPrototype, propertyPanel.transform).text = header;
@@ -69,6 +76,13 @@ public class DataSourceTableForm : MonoBehaviour
                 Refresh();
                 Current.SaveProject();
             }
+        });
+        entryAlias.onValueChanged.AddListener(x =>
+        {
+            if (x == 0)
+                _table.SetEntryAlias("");
+            else
+                _table.SetEntryAlias(_table.GetHeaders()[x - 1]);
         });
     }
 

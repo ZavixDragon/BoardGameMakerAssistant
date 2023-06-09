@@ -31,7 +31,7 @@ public class SelectProjectButton : MonoBehaviour
                     var newProject = new ProjectMetaData
                     {
                         Name = $"My Project {number}",
-                        FilePath = Path.Combine(Application.persistentDataPath, $"MyProject{number}.json")
+                        FilePath = Path.Combine(Application.persistentDataPath)
                     };
                     projects.List.Add(newProject);
                     Current.SelectProject(newProject);

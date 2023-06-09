@@ -7,13 +7,13 @@ public class DataSource
 {
     private Dictionary<string, Table> _tableMap;
 
-    public string Id;
-    public string SpreadsheetId;
-    public string Name;
-    public List<Table> Tables;
+    public string Id = "";
+    public string SpreadsheetId = "";
+    public string Name = "";
+    public List<Table> Tables = new List<Table>();
 
     public void Refresh() => _tableMap = null;
-    
+
     public Table GetTable(string tableName) 
         => (_tableMap ??= Tables.ToDictionary(x => x.Name, x => x))[tableName];
 }

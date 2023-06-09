@@ -15,13 +15,15 @@ public static class Current
     private static ProjectMetaData _currentProjectMetaData = new ProjectMetaData();
     private static Project _currentProject = new Project();
     private static DataSource _currentDataSource;
-    private static GamePiece _gamePiece;
+    private static Table _currentTable;
+    private static GamePiece _currentGamePiece;
 
     public static ClientSecrets GoogleSheetsCredentials => _currentCredentials;
     public static Projects Projects => _currentProjects;
     public static Project Project => _currentProject;
     public static DataSource DataSource => _currentDataSource;
-    public static GamePiece GamePiece => _gamePiece;
+    public static Table Table => _currentTable;
+    public static GamePiece GamePiece => _currentGamePiece;
 
     public static void Init()
     {
@@ -56,20 +58,29 @@ public static class Current
         mutateProject(_currentProject);
         SaveProject();
     }
+    
+    public static void MutateAndSave(Action<GamePiece> mutatePiece)
+    {
+        mutatePiece(_currentGamePiece);
+        SaveProject();
+    }
 
     public static void SelectProject(ProjectMetaData metaData)
     {
         _currentProjectMetaData = metaData;
-        _storedProject = new JsonFileStored<Project>(_currentProjectMetaData.FilePath, () => new Project());
+        _storedProject = new JsonFileStored<Project>(_currentProjectMetaData.FullPath, () => new Project());
         _currentProject =  _storedProject.Get();
         _currentProject.MetaData = _currentProjectMetaData;
     }
     
     public static void SelectDataSource(DataSource dataSource)
         => _currentDataSource = dataSource;
+    
+    public static void SelectTable(Table table)
+        => _currentTable = table;
 
     public static void SelectGamePiece(GamePiece gamePiece)
-        => _gamePiece = gamePiece; 
+        => _currentGamePiece = gamePiece; 
 
     public static void DeleteProject(ProjectMetaData metaData)
     {
@@ -95,9 +106,10 @@ public static class Current
     {
         if (string.IsNullOrWhiteSpace(path))
             return "Path can't be empty";
-        if (_currentProjects.List.Any(x => x.FilePath.ToLower() == path.ToLower()))
+        var fullPath = Path.Combine(path, $"{_currentProjectMetaData.Name}.json");
+        if (_currentProjects.List.Any(x => x.FullPath.ToLower() == fullPath.ToLower()))
             return "Path is already taken";
-        _storedProject = new JsonFileStored<Project>(path, () => new Project());
+        _storedProject = new JsonFileStored<Project>(fullPath, () => new Project());
         if (_storedProject.TryWrite(x => _currentProject))
         {
             DeleteProjectFiles();
@@ -108,7 +120,7 @@ public static class Current
         }
         else
         {
-            _storedProject = new JsonFileStored<Project>(_currentProjectMetaData.FilePath, () => new Project());
+            _storedProject = new JsonFileStored<Project>(_currentProjectMetaData.FullPath, () => new Project());
             return "Couldn't write to file path provided";
         }
     }
@@ -132,7 +144,8 @@ public static class Current
     {
         try
         {
-            File.Delete(_currentProjectMetaData.FilePath);
+            File.Delete(_currentProjectMetaData.FullPath);
+            Directory.Delete(_currentProjectMetaData.DirectoryPath);
         }
         catch {}
     }

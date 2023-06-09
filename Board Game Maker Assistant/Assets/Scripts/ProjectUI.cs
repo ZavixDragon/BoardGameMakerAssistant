@@ -43,7 +43,9 @@ public class ProjectUI : MonoBehaviour
         });
         addDataSource.Init("Add Data Source", new [] {"Google Spreadsheet ID"}, "Add", new Func<string>[] {() => ""}, x =>
         {
+            Message.Publish(new ToggleLoading());
             var error = TryGetDataSource(x[0], out var dataSource);
+            Message.Publish(new ToggleLoading());
             if (string.IsNullOrWhiteSpace(error))
             {
                 Current.MutateAndSave(project => project.DataSources.Add(dataSource));
@@ -80,16 +82,19 @@ public class ProjectUI : MonoBehaviour
             var outdatedTable = dataSource.Tables.FirstAsMaybe(table => table.Name.ToLower() == updatedTable.Name.ToLower());
             if (outdatedTable.IsMissing)
                 return updatedTable;
-            return new Table
+            var result = new Table
             {
-                Name = updatedTable.Name,
+                Name = outdatedTable.Value.Name,
                 Direction = outdatedTable.Value.Direction,
                 Header = outdatedTable.Value.Header,
                 EntriesStartAt = outdatedTable.Value.EntriesStartAt,
                 RawData = updatedTable.RawData
             };
+            result.SetEntryAlias(outdatedTable.Value.EntryAlias);
+            return result;
         }).ToList();
         dataSource.Refresh();
+        Current.Project.EnsureValid();
         Current.SaveProject();
         Message.Publish(new DataSourcesUpdated());
     }
